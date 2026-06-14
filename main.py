@@ -38,6 +38,7 @@ s3_client = boto3.client(
 
 @app.get("/signe")
 async def get_signed_url():
+    print(f"Request received for /signe endpoint")
     try:
         url = s3_client.generate_presigned_url(
             ClientMethod="get_object",
@@ -47,8 +48,10 @@ async def get_signed_url():
             },
             ExpiresIn=3600,  # URL valid for 1 hour
         )
+        print(f"Signed URL generated successfully for {STORAGE_LINUX_PATH}")
         return {"url": url}
     except Exception as e:
+        print(f"ERROR in /signe: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/health")
